@@ -1,6 +1,6 @@
 #ReadMe
 
-#This notebook processes data downlnoaded from the PGA Tour stats portal saved in various folders locally
+# This notebook processes data downlnoaded from the PGA Tour stats portal saved in various folders locally
 
 ###
 
@@ -67,7 +67,7 @@ print(f"Total rows combined: {len(combined_df)}")
 
 ###
 
-#combine stats with money files initially, will require some clean up
+# combine stats with money files initially, will require some clean up
 
 import os
 import pandas as pd
@@ -148,7 +148,7 @@ final_df.to_csv('panel_model_data.csv', index=False)
 
 ###
 
-#begin cleaning merged SG files together over time, with player_ID and season being primary keys
+# begin cleaning merged SG files together over time, with player_ID and season being primary keys
 
 import os
 import pandas as pd
@@ -250,7 +250,7 @@ final_df.to_csv('panel_model_data.csv', index=False)
 
 ###
 
-#create money per event variable
+#  create money per event variable
 
 import os
 import pandas as pd
@@ -356,7 +356,7 @@ final_df.to_csv('panel_model_data.csv', index=False)
 
 ###
 
-#adjust money features for inflation. need to have CPI data downloaded to machien locally ('cpi.xlsx')
+# adjust money features for inflation. need to have CPI data downloaded to machien locally ('cpi.xlsx')
 
 import pandas as pd
 
