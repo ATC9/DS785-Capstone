@@ -1,9 +1,9 @@
 #ReadME:
 
-#This script proccess data stored in multiple folders on a local machine to build a modeling panel data set.
-#This particular script was used to build the model data set leveraging traditional golf statistics.
+# This script proccess data stored in multiple folders on a local machine to build a modeling panel data set.
+# This particular script was used to build the model data set leveraging traditional golf statistics.
 
-#loop through folders to merge data together via primary key player_id and season
+# loop through folders to merge data together via primary key player_id and season
 
 import os
 import pandas as pd
@@ -137,7 +137,7 @@ final_df.to_csv('traditional_model_data.csv', index=False)
 
 ###########
 
-#Create shortgam feature, and clean existing features
+# Create shortgam feature, and clean existing features
 
 import pandas as pd
 
@@ -177,7 +177,7 @@ print(f"Final dataset shape with new features: {final_df.shape}")
 
 #####
 
-#adjust money features for inflation - need to download CPI data from bls.gove website and save it locally (i.e., 'cpi.xlsx')
+# adjust money features for inflation - need to download CPI data from bls.gove website and save it locally (i.e., 'cpi.xlsx')
 
 
 import pandas as pd
@@ -204,7 +204,7 @@ print("Earnings adjusted for inflation and saved to 'adjusted_traditional_model_
 
 ###
 
-#add time trend to data set for modeling purposes - this really isnt necessary here, could be done at any point
+# add time trend to data set for modeling purposes - this really isnt necessary here, could be done at any point
 
 
 # Import required libraries
