@@ -103,11 +103,11 @@ df = pd.read_csv("adjusted_panel_model_data_with_time.csv")
 df['LN_WINNINGS'] = np.log(df['Money_Per_Event_Adjusted'])
 df['LN_EVENTS'] = np.log(df['Events'])
 
-# Define predictors
-features = ['SG_OTT', 'SG_APP', 'SG_ATG', 'SG_PUT', 'LN_EVENTS', 'TIME']
+# Define predictors - exclude time/events, not needed here
+features = ['SG_OTT', 'SG_APP', 'SG_ATG', 'SG_PUT']
 
 # Set up subplot grid
-fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(15, 8))
+fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(15, 8))
 axes = axes.flatten()
 
 # Plot each scatterplot
