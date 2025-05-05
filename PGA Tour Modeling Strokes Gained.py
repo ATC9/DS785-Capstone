@@ -72,7 +72,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 X_cv = df[['SG_OTT', 'SG_APP', 'SG_ATG', 'SG_PUT', 'LN_EVENTS', 'LN_EVENTS_SQ', 'TIME']]
 y_cv = df['LN_WINNINGS']
 
-# 5-fold CV
+# cross validated model
 cv = KFold(n_splits=5, shuffle=True, random_state=42)
 ols_cv_model = LinearRegression()
 y_pred_cv = cross_val_predict(ols_cv_model, X_cv, y_cv, cv=cv)
@@ -105,7 +105,7 @@ X = df[['SG_OTT', 'SG_APP', 'SG_ATG', 'SG_PUT', 'LN_EVENTS', 'LN_EVENTS_SQ', 'TI
 y = df['LN_WINNINGS']
 features = X.columns.tolist()
 
-# === LassoCV (10-fold)
+# === LassoCV
 lasso_model = make_pipeline(
     StandardScaler(),
     LassoCV(cv=10, random_state=42)
@@ -113,7 +113,7 @@ lasso_model = make_pipeline(
 lasso_model.fit(X, y)
 lasso_coefs = lasso_model.named_steps['lassocv'].coef_
 
-# === RidgeCV (10-fold)
+# === RidgeCV
 ridge_model = make_pipeline(
     StandardScaler(),
     RidgeCV(cv=10)
@@ -121,7 +121,7 @@ ridge_model = make_pipeline(
 ridge_model.fit(X, y)
 ridge_coefs = ridge_model.named_steps['ridgecv'].coef_
 
-# === ElasticNetCV (10-fold)
+# === ElasticNetCV
 enet_model = make_pipeline(
     StandardScaler(),
     ElasticNetCV(cv=10, random_state=42)
@@ -282,7 +282,7 @@ features = [
 X = df[features]
 y = df['LN_WINNINGS']
 
-# Define and fit RidgeCV model with 10-fold cross-validation
+# Define and fit RidgeCV model
 ridge_model = make_pipeline(
     StandardScaler(),
     RidgeCV(cv=10)
@@ -327,7 +327,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 import numpy as np
 import pandas as pd
 
-# Feature engineering (if not done yet)
+# Feature engineering just in case
 df['LN_WINNINGS'] = np.log(df['Money_Per_Event_Adjusted'])
 df['LN_EVENTS'] = np.log(df['Events'])
 df['LN_EVENTS_SQ'] = df['LN_EVENTS'] ** 2
@@ -338,7 +338,7 @@ df['SG_APP_TIME'] = df['SG_APP'] * df['TIME']
 df['SG_ATG_TIME'] = df['SG_ATG'] * df['TIME']
 df['SG_PUT_TIME'] = df['SG_PUT'] * df['TIME']
 
-# === Set up datasets ===
+# === Set up datasets for side by side comparison
 X_orig = df[['SG_OTT', 'SG_APP', 'SG_ATG', 'SG_PUT', 'LN_EVENTS', 'LN_EVENTS_SQ', 'TIME']]
 X_ext = df[['SG_OTT', 'SG_APP', 'SG_ATG', 'SG_PUT',
             'LN_EVENTS', 'LN_EVENTS_SQ', 'TIME',
@@ -348,7 +348,7 @@ n = len(y)
 k_orig = X_orig.shape[1] + 1
 k_ext = X_ext.shape[1] + 1
 
-# === Fit Original Ridge ===
+# === Fit Original Ridge
 ridge_orig = make_pipeline(StandardScaler(), RidgeCV(cv=10))
 ridge_orig.fit(X_orig, y)
 y_pred_orig = ridge_orig.predict(X_orig)
@@ -359,7 +359,7 @@ aic_orig = n * np.log(rss_orig / n) + 2 * k_orig
 bic_orig = n * np.log(rss_orig / n) + k_orig * np.log(n)
 alpha_orig = ridge_orig.named_steps['ridgecv'].alpha_
 
-# === Fit Ridge with Interaction Terms ===
+# === Fit Ridge with Interaction Terms
 ridge_ext = make_pipeline(StandardScaler(), RidgeCV(cv=10))
 ridge_ext.fit(X_ext, y)
 y_pred_ext = ridge_ext.predict(X_ext)
@@ -370,7 +370,7 @@ aic_ext = n * np.log(rss_ext / n) + 2 * k_ext
 bic_ext = n * np.log(rss_ext / n) + k_ext * np.log(n)
 alpha_ext = ridge_ext.named_steps['ridgecv'].alpha_
 
-# === Final Comparison Table ===
+# === Final Comparison Table
 ridge_compare = pd.DataFrame([
     {
         'Model': 'Original Ridge',
