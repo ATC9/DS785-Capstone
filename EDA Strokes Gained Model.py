@@ -1,4 +1,9 @@
-#EDA across the panel data set that focuses on Strokes Gained stats as feature variables
+# EDA across the panel data set that focuses on Strokes Gained stats as feature variables
+# Summary Stats
+# Histogram Matrix
+# Correlation Matrix Heatmap
+# VIF Calcs
+# Scatter Plot Relationships
 
 # Load libraries and data
 
@@ -13,7 +18,7 @@ import statsmodels.api as sm
 # Load the dataset
 df = pd.read_csv("adjusted_panel_model_data_with_time.csv")
 
-#Create needed variables
+# Create needed variables
 df['LN_WINNINGS'] = np.log(df['Money_Per_Event_Adjusted'])
 df['LN_EVENTS'] = np.log(df['Events'])
 df['LN_EVENTS_SQ'] = df['LN_EVENTS'] ** 2
@@ -49,7 +54,7 @@ plt.show()
 
 ###
 
-#Vif scores less events vars
+# Vif scores less events vars
 
 X_vif = df[['SG_OTT', 'SG_APP', 'SG_ATG', 'SG_PUT', 'TIME']]
 X_vif = sm.add_constant(X_vif)
