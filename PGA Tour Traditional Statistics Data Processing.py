@@ -60,13 +60,13 @@ for i, df in enumerate(stat_dfs):
     if round_cols and 'Total_Putts' not in df.columns:
         stat_dfs[i] = df.drop(columns=round_cols)
 
-# Merge all stat DataFrames safely
+# Merge all stat DataFrames
 merged_stats_df = reduce(
     lambda left, right: pd.merge(left, right, on=['Player_ID', 'Season'], how='outer', suffixes=('', '_dup')),
     stat_dfs
 )
 
-# Fill Rounds column and drop any duplicates
+# Fill Rounds column and drop dupes
 round_cols = [col for col in merged_stats_df.columns if 'Rounds' in col]
 if len(round_cols) > 1:
     merged_stats_df['Rounds'] = merged_stats_df[round_cols].bfill(axis=1).iloc[:, 0]
