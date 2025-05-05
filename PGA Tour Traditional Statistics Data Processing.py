@@ -72,7 +72,7 @@ if len(round_cols) > 1:
     merged_stats_df['Rounds'] = merged_stats_df[round_cols].bfill(axis=1).iloc[:, 0]
     merged_stats_df.drop(columns=[col for col in round_cols if col != 'Rounds'], inplace=True)
 
-# === Load Money Data ===
+# === Load Money Data
 money_folder = os.path.join(root_dir, 'Money per Event')
 money_dfs = []
 
@@ -96,7 +96,7 @@ if not money_dfs:
     raise ValueError("No valid money data found.")
 money_df = pd.concat(money_dfs, ignore_index=True)
 
-# === Extract Player Names from DD folder ===
+# === Extract Player Names from DD folder
 name_dfs = []
 dd_folder = os.path.join(root_dir, 'DD')
 
@@ -114,7 +114,7 @@ if not name_dfs:
     raise ValueError("No player name data found.")
 name_df = pd.concat(name_dfs).drop_duplicates(subset='Player_ID')
 
-# === Final Merge ===
+# === Final Merge
 final_df = pd.merge(merged_stats_df, money_df, on=['Player_ID', 'Season'], how='inner')
 final_df = pd.merge(final_df, name_df, on='Player_ID', how='left')
 
@@ -135,7 +135,7 @@ print(f"Final dataset shape: {final_df.shape}")
 final_df.to_csv('traditional_model_data.csv', index=False)
 
 
-###########
+####
 
 # Create shortgam feature, and clean existing features
 
