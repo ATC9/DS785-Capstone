@@ -1,4 +1,8 @@
 #This script performs EDA against the panel data set thath includes traditional golf statistics
+# Summary Stats
+# Histogram/distribution
+# Correlaton and VIF Scores
+# Scatter Plots
 
 #Load and Prepare DAta
 
@@ -30,7 +34,7 @@ df['TIME'] = df['Season'] - 2004 + 1
 
 ###
 
-#Summary Stats, ex. time
+# Summary Stats, ex. time
 
 eda_vars = ['WINNINGS', 'DD', 'DA', 'GIR', 'SS', 'PPGIR', 'EVENTS', 'EVENTS^2', 'SHORTGAM']
 summary = df[eda_vars].describe().T
@@ -41,7 +45,7 @@ print(summary[['mean', 'std', 'min', '25%', '50%', '75%', 'max', 'skew', 'kurtos
 
 ###
 
-#Correlation Matrix
+# Correlation Matrix
 
 correlation_matrix = df[eda_vars].corr()
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
@@ -50,7 +54,7 @@ plt.show()
 
 ###
 
-#VIF Calcs - remove events, not needed here
+# VIF Calcs - remove events, not needed here
 
 # VIF for all predictors (excluding WINNINGS)
 X = df[['DD', 'DA', 'GIR', 'SS', 'PPGIR', 'SHORTGAM']]
@@ -64,7 +68,7 @@ print(vif[vif['Variable'] != 'const'])
 
 ###
 
-#Histogram Matrix
+# Histogram Matrix
 
 fig, axes = plt.subplots(3, 3, figsize=(15, 12))
 axes = axes.flatten()
@@ -83,7 +87,7 @@ plt.show()
 
 ###
 
-#Scatter plots
+# Scatter plots
 
 fig, axes = plt.subplots(3, 3, figsize=(15, 12))
 axes = axes.flatten()
