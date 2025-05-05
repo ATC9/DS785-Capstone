@@ -12,10 +12,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, r2_score
 
-# === Load and Prepare Data === #
+# === Load and Prepare Data
 df = pd.read_csv("adjusted_traditional_model_data_with_time.csv")
 
-# Log transforms
+# Log transform
 df['LN_WINNINGS'] = np.log(df['Money_Per_Event_Adjusted'])
 df['LN_DD'] = np.log(df['Driving_Distance'])
 df['LN_PPGIR'] = np.log(df['Putts_Per_GIR'])
@@ -30,28 +30,28 @@ features = ['LN_DD', 'Driving_Accuracy', 'Greens_In_Regulation',
 X = df[features]
 y = df['LN_WINNINGS']
 
-# === Train/test split === #
+# === Train/test split 80/20
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# === Standardize predictors === #
+# === Standardize predictors
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
-# === Add constant and fit OLS === #
+# === Add constant and fit OLS
 X_train_sm = sm.add_constant(X_train_scaled)
 X_test_sm = sm.add_constant(X_test_scaled)
 
 ols_model = sm.OLS(y_train, X_train_sm).fit()
 y_pred = ols_model.predict(X_test_sm)
 
-# === Evaluate Performance === #
+# === Evaluate Performance
 rmse = np.sqrt(mean_squared_error(y_test, y_pred))
 r2 = r2_score(y_test, y_pred)
 aic = ols_model.aic
 bic = ols_model.bic
 
-# === Output Results === #
+# === Output Results
 print("=== Cross-Validated OLS Model Performance ===")
 print(f"R-squared: {r2:.4f}")
 print(f"RMSE: {rmse:.4f}")
@@ -75,6 +75,9 @@ ols_results_df = pd.DataFrame({
 print(ols_results_df.round(4))
 
 ###
+# Regularlization regression modeling - Lasso, Ridge, ElasticNet
+# Cross Validation
+# Tuning alpha and L1Ratio [<<-- for Enet only]
 
 import pandas as pd
 import numpy as np
@@ -126,7 +129,7 @@ y_pred_lasso = lasso.predict(X_test_scaled)
 y_pred_ridge = ridge.predict(X_test_scaled)
 y_pred_enet = enet.predict(X_test_scaled)
 
-# === Statsmodels-based AIC/BIC and performance printing === #
+# === Statsmodels-based AIC/BIC and performance printing - for comparison sake to OLS model
 def report_model_metrics(y_true, y_pred, model_name):
     y_true_aligned = pd.Series(y_true).reset_index(drop=True)
     y_pred_aligned = pd.Series(y_pred).reset_index(drop=True)
@@ -176,8 +179,8 @@ coefficients_df = coef_df_lasso.merge(coef_df_ridge, on="Variable").merge(coef_d
 print(coefficients_df)
 
 ###
-
-# OLS with cross validation with time index
+# Extended OLS Model:
+# OLS with cross validation with time index - chosen due to better fit
 
 import pandas as pd
 import numpy as np
@@ -186,7 +189,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, r2_score
 import statsmodels.api as sm
 
-# === Load and Prepare Data === #
+# === Load and Prepare Data
 df = pd.read_csv("adjusted_traditional_model_data_with_time.csv")
 
 # Log transform variables
@@ -205,7 +208,7 @@ df['LN_PPGIR_TIME'] = df['LN_PPGIR'] * df['TIME']
 df['SS_TIME'] = df['Sand_Saves'] * df['TIME']
 df['LN_SHORTGAM_TIME'] = df['LN_SHORTGAM'] * df['TIME']
 
-# === Define Variables for Original and Interaction Models === #
+# === Define Variables for Original and Interaction Models
 features_original = ['LN_DD', 'Driving_Accuracy', 'Greens_In_Regulation',
                      'LN_PPGIR', 'Sand_Saves', 'LN_SHORTGAM',
                      'LN_EVENTS', 'LN_EVENTS_SQ', 'TIME']
@@ -217,32 +220,32 @@ X_orig = df[features_original]
 X_inter = df[features_interaction]
 y = df['LN_WINNINGS']
 
-# === Train/Test Split === #
+# === Train/Test Split
 X_train_orig, X_test_orig, y_train_orig, y_test_orig = train_test_split(X_orig, y, test_size=0.2, random_state=42)
 X_train_inter, X_test_inter, y_train_inter, y_test_inter = train_test_split(X_inter, y, test_size=0.2, random_state=42)
 
-# === Standardize Predictors === #
+# === Standardize Predictors
 scaler = StandardScaler()
 X_train_orig_scaled = scaler.fit_transform(X_train_orig)
 X_test_orig_scaled = scaler.transform(X_test_orig)
 X_train_inter_scaled = scaler.fit_transform(X_train_inter)
 X_test_inter_scaled = scaler.transform(X_test_inter)
 
-# === Add Constant for Intercept === #
+# === Add Constant for Intercept
 X_train_orig_const = sm.add_constant(X_train_orig_scaled)
 X_test_orig_const = sm.add_constant(X_test_orig_scaled)
 X_train_inter_const = sm.add_constant(X_train_inter_scaled)
 X_test_inter_const = sm.add_constant(X_test_inter_scaled)
 
-# === Fit OLS Models === #
+# === Fit OLS Models
 ols_model_orig = sm.OLS(y_train_orig, X_train_orig_const).fit()
 ols_model_inter = sm.OLS(y_train_inter, X_train_inter_const).fit()
 
-# === Predict on Test Sets === #
+# === Predict on Test Sets
 y_pred_orig = ols_model_orig.predict(X_test_orig_const)
 y_pred_inter = ols_model_inter.predict(X_test_inter_const)
 
-# === Evaluate Models === #
+# === Evaluate Models
 def model_metrics(y_true, y_pred, model, X):
     return {
         "RMSE": np.sqrt(mean_squared_error(y_true, y_pred)),
@@ -254,7 +257,7 @@ def model_metrics(y_true, y_pred, model, X):
 metrics_orig = model_metrics(y_test_orig, y_pred_orig, ols_model_orig, X_test_orig_const)
 metrics_inter = model_metrics(y_test_inter, y_pred_inter, ols_model_inter, X_test_inter_const)
 
-# === Print Results === #
+# === Print Results
 print("Original OLS Metrics:\n", metrics_orig)
 print("OLS with Interaction Terms Metrics:\n", metrics_inter)
 print("\nModel Summary (with interaction terms):")
