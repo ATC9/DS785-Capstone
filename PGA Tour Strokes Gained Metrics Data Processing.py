@@ -1,6 +1,8 @@
 #ReadMe
 
 # This notebook processes data downlnoaded from the PGA Tour stats portal saved in various folders locally
+# Loops include error checks for debugging 
+
 
 ###
 
